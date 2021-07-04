@@ -25,7 +25,6 @@ function initialLoad() {
 		firstTenSampleLabels = data.samples[0].otu_labels.slice(0,10)
 		firstTenSampleLabels = firstTenSampleLabels.reverse();
 		//console.log(firstTenSampleIds);
-		//console.log('made it here toox3');
 
 		var trace1 = {
 		  x: firstTenSamples.map(row => row),
@@ -64,6 +63,29 @@ function initialLoad() {
 		  .text(function (d) { return d; }) // text showed in the menu
 		  .attr("value", function (d) { return d; }) // corresponding value returned by the button
 	
+		// Bubble chart preparation  
+		var trace1 = {
+			x: data.samples[0].otu_ids,
+			y: data.samples[0].sample_values,
+			text: data.samples[0].otu_labels,
+			mode: 'markers',
+			marker: {
+				color: data.samples[0].otu_ids,	
+				size: data.samples[0].sample_values
+			}
+		};
+		  
+		var bubbleData = [trace1];
+		  
+		var layout = {
+			title: 'Bubble Chart Hover Text',
+			showlegend: false,
+			height: 800,
+			width: 2400
+		};
+		  
+		Plotly.newPlot('bubble', bubbleData, layout);
+
 	});
 };
 
@@ -93,7 +115,6 @@ function optionChanged(selectedSample) {
 		firstTenSampleLabels = data.samples[sampleKey].otu_labels.slice(0,10)
 		firstTenSampleLabels = firstTenSampleLabels.reverse();
 		//console.log(firstTenSampleIds);
-		//console.log('made it here toox3');
 
 		var trace1 = {
 		  x: firstTenSamples.map(row => row),
@@ -123,6 +144,29 @@ function optionChanged(selectedSample) {
   
 		// Render the plot to the div tag with id "plot"
 		Plotly.newPlot("bar", chartData, layout);
+
+		// Bubble chart preparation  
+		var trace1 = {
+			x: data.samples[sampleKey].otu_ids,
+			y: data.samples[sampleKey].sample_values,
+			text: data.samples[sampleKey].otu_labels,
+			mode: 'markers',
+			marker: {
+				color: data.samples[sampleKey].otu_ids,	
+				size: data.samples[sampleKey].sample_values
+			}
+		};
+		console.log('Am I redoing the Bubble chart?')  
+		var bubbleData = [trace1];
+		  
+		var layout = {
+			title: 'Bubble Chart Hover Text',
+			showlegend: false,
+			height: 800,
+			width: 2400
+		};
+		  
+		Plotly.newPlot('bubble', bubbleData, layout);
 
 	});
 };
