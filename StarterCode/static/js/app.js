@@ -86,6 +86,62 @@ function initialLoad() {
 		  
 		Plotly.newPlot('bubble', bubbleData, layout);
 
+		// Metadata details
+
+		//var metadict = {};
+		//metadict = data.metadata[0];
+		//let arr1 = metadict.map { "\($0) \($1)" };	
+		//var arr1 = [String]();
+		//	for (key, value) in metadict {
+    	//	arr1.append("\(key) \(value)")
+		//};
+		//
+		//var arr1 = [];
+		//var metadict = {};
+		//metadict = data.metadata[0];	
+		//for (var key in metadict) {
+   		//	if (metadict.hasOwnProperty(key)) {
+        //		arr1.push( [ key, metadict[key] ] );
+    	//	}
+		//}
+		//console.log('hey - arr1');
+		//console.log(arr1);
+		
+		var keys = [],
+			vals = [];
+		var metadict = {};
+		metadict = data.metadata[0];	
+		for (var property in metadict) {
+	 		if (metadict.hasOwnProperty(property)) {
+	  			keys.push(property);
+	  			vals.push(metadict[property]);
+			 }
+		}
+		
+		//for (let i = 0; i < (keys).length; i++) 
+		//	for (let j = 0; j < (vals).length; j++)
+		
+		var metavalues = [keys, vals];
+
+		var data = [{
+			type: 'table',
+			header: {
+				//values: [["Demographic Info"]],
+   				//align: "left"
+   				//line: {width: 1, color: 'black'},
+   				//fill: {color: "grey"},
+   				//font: {family: "Arial", size: 10, color: "white"}
+			},
+			cells: {
+			  values: metavalues,
+			  align: "center",
+			  line: {color: "black", width: 1},
+			  font: {family: "Arial", size: 8, color: ["black"]}
+			}
+		}]
+		  
+		Plotly.newPlot('gauge', data);
+	
 	});
 };
 
