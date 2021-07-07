@@ -13,7 +13,6 @@ function initialLoad() {
 		console.log(data.samples[0].sample_values.slice(0,10));
 
 		firstTenSamples = data.samples[0].sample_values.slice(0,10);
-		//console.log('made it here too');
   
 		// Reverse the array due to Plotly's defaults
 		firstTenSamples = firstTenSamples.reverse();
@@ -28,7 +27,7 @@ function initialLoad() {
 
 		var trace1 = {
 		  x: firstTenSamples.map(row => row),
-		  y: firstTenSampleIds.map(row => row),
+		  y: firstTenSampleIds.map(row => ("OTU " + String(row))),
 		  text: firstTenSampleLabels.map(row => row),
 		  type: "bar",
 		  orientation: "h"
@@ -78,7 +77,15 @@ function initialLoad() {
 		var bubbleData = [trace1];
 		  
 		var layout = {
-			title: 'Bubble Chart Hover Text',
+			title: 'Bacteria Cultures per Sample',
+			xaxis: {
+				title: 'OTU ID',
+				titlefont: {
+				  family: 'Arial, sans-serif',
+				  size: 16,
+				  color: 'black'
+				}
+			},
 			showlegend: false,
 			height: 800,
 			width: 2400
@@ -88,60 +95,18 @@ function initialLoad() {
 
 		// Metadata details
 
-		//var metadict = {};
-		//metadict = data.metadata[0];
-		//let arr1 = metadict.map { "\($0) \($1)" };	
-		//var arr1 = [String]();
-		//	for (key, value) in metadict {
-    	//	arr1.append("\(key) \(value)")
-		//};
-		//
-		//var arr1 = [];
-		//var metadict = {};
-		//metadict = data.metadata[0];	
-		//for (var key in metadict) {
-   		//	if (metadict.hasOwnProperty(key)) {
-        //		arr1.push( [ key, metadict[key] ] );
-    	//	}
-		//}
-		//console.log('hey - arr1');
-		//console.log(arr1);
-		
-		var keys = [],
-			vals = [];
 		var metadict = {};
 		metadict = data.metadata[0];	
 		for (var property in metadict) {
 	 		if (metadict.hasOwnProperty(property)) {
-	  			keys.push(property);
-	  			vals.push(metadict[property]);
-			 }
-		}
-		
-		//for (let i = 0; i < (keys).length; i++) 
-		//	for (let j = 0; j < (vals).length; j++)
-		
-		var metavalues = [keys, vals];
-
-		var data = [{
-			type: 'table',
-			header: {
-				//values: [["Demographic Info"]],
-   				//align: "left"
-   				//line: {width: 1, color: 'black'},
-   				//fill: {color: "grey"},
-   				//font: {family: "Arial", size: 10, color: "white"}
-			},
-			cells: {
-			  values: metavalues,
-			  align: "center",
-			  line: {color: "black", width: 1},
-			  font: {family: "Arial", size: 8, color: ["black"]}
+			var x = document.createElement("H6");
+			var t = document.createTextNode(String(property) + ': ' + String(metadict[property]));
+			var parent  = document.getElementById('sample-metadata');
+			parent.appendChild(t);
+			var x = document.createElement("br");
+			parent.appendChild(x);
 			}
-		}]
-		  
-		Plotly.newPlot('gauge', data);
-	
+		}
 	});
 };
 
@@ -159,7 +124,6 @@ function optionChanged(selectedSample) {
 		//console.log(data.samples[sampleKey].sample_values.slice(0,9));
 
 		firstTenSamples = data.samples[sampleKey].sample_values.slice(0,10);
-		//console.log('made it here too');
   
 		// Reverse the array due to Plotly's defaults
 		firstTenSamples = firstTenSamples.reverse();
@@ -174,7 +138,7 @@ function optionChanged(selectedSample) {
 
 		var trace1 = {
 		  x: firstTenSamples.map(row => row),
-		  y: firstTenSampleIds.map(row => row),
+		  y: firstTenSampleIds.map(row => ("OTU " + String(row))),
 		  text: firstTenSampleLabels.map(row => row),
 		  type: "bar",
 		  orientation: "h"
@@ -212,11 +176,19 @@ function optionChanged(selectedSample) {
 				size: data.samples[sampleKey].sample_values
 			}
 		};
-		console.log('Am I redoing the Bubble chart?')  
+
 		var bubbleData = [trace1];
 		  
 		var layout = {
-			title: 'Bubble Chart Hover Text',
+			title: 'Bacteria Cultures Per Sample',
+			xaxis: {
+				title: 'OTU ID',
+				titlefont: {
+				  family: 'Arial, sans-serif',
+				  size: 16,
+				  color: 'black'
+				}
+			},
 			showlegend: false,
 			height: 800,
 			width: 2400
@@ -224,6 +196,26 @@ function optionChanged(selectedSample) {
 		  
 		Plotly.newPlot('bubble', bubbleData, layout);
 
+		// Metadata details
+
+		var metadict = {};
+		//var myCleanup = document.getElementById('sample-metadata');
+		//myCleanup.removeChild();
+		var div = document.getElementById('sample-metadata');
+		while(div.firstChild){
+   			 div.removeChild(div.firstChild);
+		}	
+		metadict = data.metadata[sampleKey];	
+		for (var property in metadict) {
+	 		if (metadict.hasOwnProperty(property)) {
+				var x = document.createElement("H6");
+				var t = document.createTextNode(String(property) + ': ' + String(metadict[property]));
+				var parent  = document.getElementById('sample-metadata');
+				parent.appendChild(t);
+				var x = document.createElement("br");
+				parent.appendChild(x);
+			}
+		}
 	});
 };
 
