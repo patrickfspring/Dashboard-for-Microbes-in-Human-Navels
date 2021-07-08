@@ -2,22 +2,19 @@
 function initialLoad() {
 	// Use D3 fetch to read the JSON file - the data from the JSON file is arbitrarily named importedData as the argument
 	d3.json("samples.json").then((importedData) => {
-		// console.log(importedData);
+ 
 		var data = importedData;
 
-		console.log(data.names);
-		console.log(data.names[0], data.names[152]);
-		console.log('made it here');
-  
-		// Slice the first 10 objects for plotting
-		console.log(data.samples[0].sample_values.slice(0,10));
+		//console.log(data.names);
+		//console.log(data.names[0], data.names[152]);
+  		//console.log(data.samples[0].sample_values.slice(0,10));
 
+		// Slice the first 10 objects for plotting
 		firstTenSamples = data.samples[0].sample_values.slice(0,10);
   
 		// Reverse the array due to Plotly's defaults
 		firstTenSamples = firstTenSamples.reverse();
-		console.log(firstTenSamples);
-		//console.log('made it here toox2');
+		//console.log(firstTenSamples);
 	
 		firstTenSampleIds = data.samples[0].otu_ids.slice(0,10)
 		firstTenSampleIds = firstTenSampleIds.reverse();
@@ -51,7 +48,7 @@ function initialLoad() {
 		  }
 		};
   
-		// Render the plot to the div tag with id "plot"
+		// Render the plot to the div tag with id "bar"
 		Plotly.newPlot("bar", chartData, layout);
 
 		d3.select("#selDataset")
@@ -59,8 +56,8 @@ function initialLoad() {
 		  .data(data.names)
 		  .enter()
 		  .append('option')
-		  .text(function (d) { return d; }) // text showed in the menu
-		  .attr("value", function (d) { return d; }) // corresponding value returned by the button
+		  .text(function (d) { return d; }) 
+		  .attr("value", function (d) { return d; }) 
 	
 		// Bubble chart preparation  
 		var trace1 = {
@@ -87,8 +84,8 @@ function initialLoad() {
 				}
 			},
 			showlegend: false,
-			height: 800,
-			width: 2400
+			height: 600,
+			width: 2000
 		};
 		  
 		Plotly.newPlot('bubble', bubbleData, layout);
@@ -107,6 +104,38 @@ function initialLoad() {
 			parent.appendChild(x);
 			}
 		}
+		
+		// Extra Gauge for Belly Button Washing
+
+		var data = [
+			{
+				domain: { x: [0, 1], y: [0, 1] },
+				value: data.metadata[0].wfreq,
+				title: { text: "Belly Button Washing Frequency" },
+				type: "indicator",
+				mode: "gauge+number",
+				gauge: {
+					axis: { range: [null, 9],
+						    nticks: 9,
+							tick0: 0,
+							dtick: 1
+					},
+					steps: [
+					{ range: [0, 1], color: "#ffffe6" },
+					{ range: [1, 2], color: "#ffffb3" },
+					{ range: [2, 3], color: "#ffff80" },
+					{ range: [3, 4], color: "#ffff4d" },
+					{ range: [4, 5], color: "#ffff1a" },
+					{ range: [5, 6], color: "#e6e600" },
+					{ range: [6, 7], color: "#b3b300" },
+					{ range: [7, 8], color: "#808000" },
+					{ range: [8, 9], color: "#4d4d00" }
+					]
+				}	
+			}
+		];
+		var layout = { width: 600, height: 500, margin: { t: 25, r: 25, l: 25, b: 25 } };
+		Plotly.newPlot('gauge', data, layout);
 	});
 };
 
@@ -118,7 +147,7 @@ function optionChanged(selectedSample) {
 		for (let i = 0; i < (data.names).length; i++) {
 			if (data.names[i] == selectedSample) sampleKey = i;
 		}
-		console.log(sampleKey);
+		//console.log(sampleKey);
 
 		// Slice the first 10 objects for plotting
 		//console.log(data.samples[sampleKey].sample_values.slice(0,9));
@@ -127,8 +156,7 @@ function optionChanged(selectedSample) {
   
 		// Reverse the array due to Plotly's defaults
 		firstTenSamples = firstTenSamples.reverse();
-		console.log(firstTenSamples);
-		//console.log('made it here toox2');
+		//console.log(firstTenSamples);
 	
 		firstTenSampleIds = data.samples[sampleKey].otu_ids.slice(0,10)
 		firstTenSampleIds = firstTenSampleIds.reverse();
@@ -162,7 +190,7 @@ function optionChanged(selectedSample) {
 		  }
 		};
   
-		// Render the plot to the div tag with id "plot"
+		// Render the plot to the div tag with id "bar"
 		Plotly.newPlot("bar", chartData, layout);
 
 		// Bubble chart preparation  
@@ -190,8 +218,8 @@ function optionChanged(selectedSample) {
 				}
 			},
 			showlegend: false,
-			height: 800,
-			width: 2400
+			height: 600,
+			width: 2000
 		};
 		  
 		Plotly.newPlot('bubble', bubbleData, layout);
@@ -199,8 +227,7 @@ function optionChanged(selectedSample) {
 		// Metadata details
 
 		var metadict = {};
-		//var myCleanup = document.getElementById('sample-metadata');
-		//myCleanup.removeChild();
+
 		var div = document.getElementById('sample-metadata');
 		while(div.firstChild){
    			 div.removeChild(div.firstChild);
@@ -216,6 +243,38 @@ function optionChanged(selectedSample) {
 				parent.appendChild(x);
 			}
 		}
+	
+		// Extra Gauge for Belly Button Washing
+
+		var data = [
+			{
+				domain: { x: [0, 1], y: [0, 1] },
+				value: data.metadata[sampleKey].wfreq,
+				title: { text: "Belly Button Washing Frequency" },
+				type: "indicator",
+				mode: "gauge+number",
+				gauge: {
+					axis: { range: [null, 9],
+						    nticks: 9,
+							tick0: 0,
+							dtick: 1
+					},
+					steps: [
+					{ range: [0, 1], color: "#ffffe6" },
+					{ range: [1, 2], color: "#ffffb3" },
+					{ range: [2, 3], color: "#ffff80" },
+					{ range: [3, 4], color: "#ffff4d" },
+					{ range: [4, 5], color: "#ffff1a" },
+					{ range: [5, 6], color: "#e6e600" },
+					{ range: [6, 7], color: "#b3b300" },
+					{ range: [7, 8], color: "#808000" },
+					{ range: [8, 9], color: "#4d4d00" }
+					]
+				}	
+			}
+		];
+		var layout = { width: 600, height: 500, margin: { t: 25, r: 25, l: 25, b: 25 } };
+		Plotly.newPlot('gauge', data, layout);
 	});
 };
 
